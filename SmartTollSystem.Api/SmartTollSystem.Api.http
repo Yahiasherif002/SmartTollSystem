@@ -1,0 +1,6 @@
+@SmartTollSystem.Api_HostAddress = http://localhost:5159
+
+GET {{SmartTollSystem.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

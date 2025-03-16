@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTollSystem.Api", "SmartTollSystem.Api\SmartTollSystem.Api.csproj", "{3EDAE360-A886-407F-B51F-85631985A7EC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTollSystem.Application", "SmartTollSystem.Application\SmartTollSystem.Application.csproj", "{5C3A3D29-66A9-4A5E-BD99-076BC4D212D9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTollSystem.Domain", "SmartTollSystem.Domain\SmartTollSystem.Domain.csproj", "{26FDCC14-19E4-47B5-A2AE-5AFC82F572F0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTollSystem.Infrastructure", "SmartTollSystem.Infrastructure\SmartTollSystem.Infrastructure.csproj", "{FDB19EE6-1E3A-4BF0-8AF5-21ADDA305261}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3EDAE360-A886-407F-B51F-85631985A7EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EDAE360-A886-407F-B51F-85631985A7EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EDAE360-A886-407F-B51F-85631985A7EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EDAE360-A886-407F-B51F-85631985A7EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C3A3D29-66A9-4A5E-BD99-076BC4D212D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C3A3D29-66A9-4A5E-BD99-076BC4D212D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C3A3D29-66A9-4A5E-BD99-076BC4D212D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C3A3D29-66A9-4A5E-BD99-076BC4D212D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26FDCC14-19E4-47B5-A2AE-5AFC82F572F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26FDCC14-19E4-47B5-A2AE-5AFC82F572F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26FDCC14-19E4-47B5-A2AE-5AFC82F572F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26FDCC14-19E4-47B5-A2AE-5AFC82F572F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDB19EE6-1E3A-4BF0-8AF5-21ADDA305261}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDB19EE6-1E3A-4BF0-8AF5-21ADDA305261}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDB19EE6-1E3A-4BF0-8AF5-21ADDA305261}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDB19EE6-1E3A-4BF0-8AF5-21ADDA305261}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
