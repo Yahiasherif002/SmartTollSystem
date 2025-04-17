@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SmartTollSystem.Domain.Models
+namespace SmartTollSystem.Application.DTOs
 {
-    internal class Vehicle
+    internal class UserRegisterDTO
     {
     }
 }
