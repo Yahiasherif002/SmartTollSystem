@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace SmartTollSystem.Infrastructure.Data
 {
-    internal class Repository
+    public class Repository
     {
+
     }
 }
