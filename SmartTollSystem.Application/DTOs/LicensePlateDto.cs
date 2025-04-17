@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SmartTollSystem.Domain.DTOs
 {
-    public class LicensePlateDto
+    public record LicensePlateDto
     {
         public string PlateNumber { get; set; } = string.Empty;
        

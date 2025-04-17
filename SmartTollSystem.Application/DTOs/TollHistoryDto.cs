@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SmartTollSystem.Domain.DTOs
 {
-    public class TollHistoryDto
+    public record TollHistoryDto
     {
         public string PlateNumber { get; set; } = string.Empty;
         public DateTime Timestamp { get; set; }

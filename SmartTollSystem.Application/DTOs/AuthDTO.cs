@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace SmartTollSystem.Application.DTOs
 {
-    public class UserRegisterDTO
+    public record UserRegisterDTO
     {
-        [Required(ErrorMessage =" First name cannot be blank ")]
+        [Required(ErrorMessage = " First name cannot be blank ")]
         [StringLength(50, MinimumLength = 2)]
         public string FirstName { get; set; } = string.Empty;
         [Required(ErrorMessage = " Last name cannot be blank ")]
@@ -66,4 +66,21 @@ namespace SmartTollSystem.Application.DTOs
         public DateTime DateOfBirth { get; set; }
         public List<VehicleDto> Vehicles { get; set; } = new List<VehicleDto>();
     }
+    public record UserLoginDTO
+    {
+        [Required(ErrorMessage = " Email cannot be blank ")]
+        [EmailAddress(ErrorMessage = " Invalid email address format ")]
+        public string Email { get; set; } = string.Empty;
+        [Required(ErrorMessage = " Password cannot be blank ")]
+        public string Password { get; set; } = string.Empty;
+    }
+
+    public record AuthResultDto
+    (
+        string Token,
+        string? RefreshToken ,
+        DateTime ExpiresAt,
+        UserDto User ,
+        string? Message  = null
+    );
 }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SmartTollSystem.Domain.Entities;
+using SmartTollSystem.Domain.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,9 +10,11 @@ namespace SmartTollSystem.Domain.Interfaces
 {
     public interface IUnitOfWork
     {
-        IUserRepository Users { get; }
-        IVehicleRepository Vehicles { get; }
-        ITollRepository Tolls { get; }
+       IRepository<TollHistory> TollRepository { get; }
+        IRepository<Vehicle> VehicleRepository { get; }
+        IRepository<Radar> RadarRepository { get; }
+        IRepository<Detection> DetectionRepository { get; }
+
         Task<int> CompleteAsync();
 
     }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SmartTollSystem.Domain.DTOs
 {
-    public class UserDto
+    public record UserDto
     {
         public Guid Id { get; set; }
         public string FullName { get; set; } = string.Empty;
