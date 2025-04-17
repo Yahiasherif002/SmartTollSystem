@@ -1,12 +1,155 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+//using Microsoft.IdentityModel.JsonWebTokens;
+using Microsoft.IdentityModel.Tokens;
+using SmartTollSystem.Application.Contracts;
+using SmartTollSystem.Application.DTOs;
+using SmartTollSystem.Domain.Entities.Identity;
+using System;
 using System.Collections.Generic;
+using System.Data;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SmartTollSystem.Application.Services
 {
-    internal class AuthService
+    public class AuthService:IAuthService
     {
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<ApplicationRole> _roleManager;
+        private readonly IConfiguration _configuration;
+        public AuthService(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager,IConfiguration configuration)
+        {
+            _userManager = userManager;
+            _roleManager = roleManager;
+            _configuration = configuration;
+        }
+
+
+        public async Task<AuthResultDto> RegisterAsync(UserRegisterDTO userRegisterDTO)
+        {
+            if (string.IsNullOrWhiteSpace(userRegisterDTO.role))
+            {
+                return new AuthResultDto(
+                    Token: string.Empty,
+                    Success: false,
+                    Message: "Role cannot be null or empty."
+                );
+            }
+
+            var user = new ApplicationUser
+            {
+                UserName = userRegisterDTO.Email,
+                Email = userRegisterDTO.Email,
+                PhoneNumber = userRegisterDTO.PhoneNumber,
+                FullName = userRegisterDTO.FirstName + " " + userRegisterDTO.LastName
+            };
+
+            var result = await _userManager.CreateAsync(user, userRegisterDTO.Password);
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(user, userRegisterDTO.role);
+                return new AuthResultDto(GenerateToken(user), true, Message: "User registered successfully");
+            }
+
+            return new AuthResultDto(
+                Token: string.Empty,
+                Success: false,
+                Message: string.Join(", ", result.Errors.Select(e => e.Description))
+            );
+        }
+
+        
+
+        public async Task<AuthResultDto> LoginAsync(UserLoginDTO userLoginDTO)
+        {
+            var user = await _userManager.FindByEmailAsync(userLoginDTO.Email);
+            if (user == null)
+            {
+                return new AuthResultDto(
+                    Token: string.Empty,
+                    Success: false,
+                    Message: "Invalid email or password"
+                );
+            }
+
+            var result = await _userManager.CheckPasswordAsync(user, userLoginDTO.Password);
+            if (result)
+            {
+                return new AuthResultDto(
+                    Token: GenerateToken(user),
+                    Success: true,
+                    Message: "User logged in successfully"
+                );
+            }
+
+            return new AuthResultDto(
+                Token: string.Empty,
+                Success: false,
+                Message: "Invalid email or password"
+            );
+        }
+        private  string GenerateToken(ApplicationUser user)
+        {
+            DateTime Expiration = DateTime.UtcNow.AddMinutes(Convert.ToDouble(_configuration["Jwt:ExpireTime"]));
+            var roles =  _userManager.GetRolesAsync(user).Result;
+
+            var claims = new List<Claim>
+            {
+                new Claim(JwtRegisteredClaimNames.Sub,user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
+                new Claim(JwtRegisteredClaimNames.Iat,DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()),
+                new Claim(ClaimTypes.Email,user.Email??string.Empty),
+                new Claim(ClaimTypes.NameIdentifier,user.Id.ToString()),
+                new Claim(ClaimTypes.Name,user.FullName)
+            };
+            claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var creds = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha512);
+
+            var tokenGenerator = new JwtSecurityToken(
+                _configuration["Jwt:Issuer"],
+                _configuration["Jwt:Audience"],
+                claims,
+                expires: Expiration,
+                signingCredentials: creds 
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(tokenGenerator);
+
+
+        }
+
+        
+        public Task<string> GetUserIdFromTokenAsync(string token)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadJwtToken(token);
+            var userIdClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+            return Task.FromResult(userIdClaim?.Value);
+        }
+        public Task<string> GetRoleFromTokenAsync(string token)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadJwtToken(token);
+            var roleClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
+            return Task.FromResult(roleClaim?.Value);
+        }
+        public Task<DateTime> GetExpirationDateFromTokenAsync(string token)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadJwtToken(token);
+            var expirationClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Exp);
+            if (expirationClaim != null)
+            {
+                var expirationDate = DateTimeOffset.FromUnixTimeSeconds(long.Parse(expirationClaim.Value)).UtcDateTime;
+                return Task.FromResult(expirationDate);
+            }
+            return Task.FromResult(DateTime.MinValue);
+        }
     }
 }

@@ -4,6 +4,10 @@ using SmartTollSystem.Domain.Entities.Identity;
 using SmartTollSystem.Infrastructure.Data;
 using System;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using SmartTollSystem.Domain.Interfaces;
+using SmartTollSystem.Application.Contracts;
+using SmartTollSystem.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,13 +25,33 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
-    .AddEntityFrameworkStores<AppDbContext>()
-    .AddDefaultTokenProviders();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IVehicleService, VehicleService>();
+builder.Services.AddScoped<ITollService, TollService>();
+
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+{
+    options.User.RequireUniqueEmail = true;
+    options.Password.RequiredLength = 6;
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireNonAlphanumeric = false;
+})  .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders().
+    AddUserStore<UserStore<ApplicationUser,ApplicationRole,AppDbContext,Guid>>().
+    AddRoleStore<RoleStore<ApplicationRole, AppDbContext, Guid>>();
+
+
+
+
+
+
 
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer(); //Generates description for all endpoints
-//builder.Services.AddSwaggerGen(); //generates OpenAPI specification
+builder.Services.AddSwaggerGen(); //generates OpenAPI specification
 
 
 
@@ -76,8 +100,30 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+    app.MapOpenApi();
+}
+else
+{
+    app.UseExceptionHandler("/error");
+    app.UseHsts();
+}
+app.UseHttpsRedirection();
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/v1/swagger.json", "SmartTollSystem API V1");
+    c.RoutePrefix = string.Empty;
+});
+app.UseRouting();
+app.UseCors("AllowAll");
+
 
 app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 
 app.Run();

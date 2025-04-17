@@ -26,6 +26,7 @@ namespace SmartTollSystem.Infrastructure.Data
         public IRepository<Vehicle> VehicleRepository => _vehicleRepository ??= new Repository<Vehicle>(_context);
         public IRepository<Radar> RadarRepository => _radarleRepository ??= new Repository<Radar>(_context);
         public IRepository<TollHistory> TollRepository => _tollRepository ??= new Repository<TollHistory>(_context);
+
         public IRepository<Detection> DetectionRepository => _detectionRepository ??= new Repository<Detection>(_context);
 
         public async Task<int> SaveAsync()

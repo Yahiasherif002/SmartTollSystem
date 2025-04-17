@@ -1,4 +1,5 @@
-﻿using SmartTollSystem.Domain.DTOs;
+﻿using SmartTollSystem.Application.DTOs;
+using SmartTollSystem.Domain.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace SmartTollSystem.Domain.Interfaces
 {
     public interface ITollService
     {
-        Task<bool> ProcessTollAsync(LicensePlateDto licensePlateDto);
+        Task<TollResultDto> ProcessTollAsync(LicensePlateDto licensePlateDto);
         Task<IEnumerable<TollHistoryDto>> GetTollHistoryAsync(Guid userId);
     }
 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace SmartTollSystem.Application.DTOs
@@ -60,16 +61,20 @@ namespace SmartTollSystem.Application.DTOs
         [Required(ErrorMessage = " Date of birth cannot be blank ")]
         [DataType(DataType.Date)]
         [Display(Name = "Date of Birth")]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        [RegularExpression(@"^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\d{4}$", ErrorMessage = " Invalid date format ")]
-        [Range(typeof(DateTime), "1900-01-01", "2100-12-31", ErrorMessage = " Date of birth must be between 1900 and 2100 ")]
+        //[DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+       // [RegularExpression(@"^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\d{4}$", ErrorMessage = " Invalid date format ")]
+       // [Range(typeof(DateTime), "1900-01-01", "2100-12-31", ErrorMessage = " Date of birth must be between 1900 and 2100 ")]
         public DateTime DateOfBirth { get; set; }
-        public List<VehicleDto> Vehicles { get; set; } = new List<VehicleDto>();
+
+        public  string? role { get; set; }
+
+        [JsonIgnore]
+        public List<VehicleDto>? Vehicles { get; set; } = new List<VehicleDto>();
     }
     public record UserLoginDTO
     {
         [Required(ErrorMessage = " Email cannot be blank ")]
-        [EmailAddress(ErrorMessage = " Invalid email address format ")]
+       // [EmailAddress(ErrorMessage = " Invalid email address format ")]
         public string Email { get; set; } = string.Empty;
         [Required(ErrorMessage = " Password cannot be blank ")]
         public string Password { get; set; } = string.Empty;
@@ -78,9 +83,8 @@ namespace SmartTollSystem.Application.DTOs
     public record AuthResultDto
     (
         string Token,
-        string? RefreshToken ,
-        DateTime ExpiresAt,
-        UserDto User ,
+        //  string? RefreshToken ,
+        bool Success,
         string? Message  = null
     );
 }

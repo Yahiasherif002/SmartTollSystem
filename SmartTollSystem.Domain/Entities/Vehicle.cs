@@ -21,6 +21,7 @@ namespace SmartTollSystem.Domain.Entities
         [Required(ErrorMessage = "Vehicle type is required")]
         public VehicleType Type { get; set; }
 
+        public decimal Balance { get; set; }
         public Guid? OwnerId { get; set; }
 
         [ForeignKey("OwnerId")]

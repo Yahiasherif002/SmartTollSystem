@@ -12,9 +12,8 @@ namespace SmartTollSystem.Application.Contracts
         Task<AuthResultDto> RegisterAsync(UserRegisterDTO userRegisterDTO);
 
         Task<AuthResultDto> LoginAsync(UserLoginDTO userLoginDTO);
-      //  Task<string> RefreshTokenAsync(string token, string refreshToken);
-        Task LogoutAsync(string token);
-        Task<bool> ValidateTokenAsync(string token);
+     //  Task<string> RefreshTokenAsync(string token, string refreshToken);
+        //Task<bool> ValidateTokenAsync(string token);
        // Task<bool> ValidateRefreshTokenAsync(string refreshToken);
         Task<string> GetUserIdFromTokenAsync(string token);
         Task<string> GetRoleFromTokenAsync(string token);
