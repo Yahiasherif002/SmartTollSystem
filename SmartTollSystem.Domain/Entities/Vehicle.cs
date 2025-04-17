@@ -19,9 +19,9 @@ namespace SmartTollSystem.Domain.Entities
         public string LicensePlate { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Vehicle type is required")]
-        public string Type { get; set; } = string.Empty;
+        public VehicleType Type { get; set; }
 
-        public string? OwnerId { get; set; }
+        public Guid? OwnerId { get; set; }
 
         [ForeignKey("OwnerId")]
         public ApplicationUser? Owner { get; set; }
