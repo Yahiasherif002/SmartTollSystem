@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <ProjectReference Include="..\SmartTollSystem.Application\SmartTollSystem.Application.csproj" />
     <ProjectReference Include="..\SmartTollSystem.Domain\SmartTollSystem.Domain.csproj" />
   </ItemGroup>
 
