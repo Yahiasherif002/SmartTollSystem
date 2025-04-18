@@ -1,8 +1,9 @@
-﻿﻿[build]
+﻿[build]
 builder = "Dockerfile"
-dockerFilePath = ""E:\Downloads\TRACK\DotNet\Project\SmartTollSystem\SmartTollSystem.Api\Dockerfile"
+dockerFilePath = "E:/Downloads/TRACK/DotNet/Project/SmartTollSystem/SmartTollSystem.Api/Dockerfile"
 
 [deploy]
 startCommand = "dotnet SmartTollSystem.Api.dll"
 restartPolicy = "always"
+
 healthCheckPath = "/health"
