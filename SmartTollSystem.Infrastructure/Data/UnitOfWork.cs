@@ -1,4 +1,5 @@
 ﻿using SmartTollSystem.Domain.Entities;
+using SmartTollSystem.Domain.Entities.Identity;
 using SmartTollSystem.Domain.Interfaces;
 using SmartTollSystem.Domain.Repositories;
 using System;
@@ -17,6 +18,7 @@ namespace SmartTollSystem.Infrastructure.Data
         private IRepository<Radar>? _radarleRepository;
         private IRepository<TollHistory>? _tollRepository;
         private IRepository<Detection>? _detectionRepository;
+        private IRepository<ApplicationUser>? _userRepository;
 
         public UnitOfWork(AppDbContext context)
         {
@@ -28,7 +30,7 @@ namespace SmartTollSystem.Infrastructure.Data
         public IRepository<TollHistory> TollRepository => _tollRepository ??= new Repository<TollHistory>(_context);
 
         public IRepository<Detection> DetectionRepository => _detectionRepository ??= new Repository<Detection>(_context);
-
+        public IRepository<ApplicationUser> UserRepository => _userRepository ??= new Repository<ApplicationUser>(_context);
         public async Task<int> SaveAsync()
         {
             return await _context.SaveChangesAsync();

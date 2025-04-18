@@ -1,6 +1,7 @@
 ﻿using SmartTollSystem.Application.DTOs;
 using SmartTollSystem.Domain.DTOs;
 using SmartTollSystem.Domain.Entities;
+using SmartTollSystem.Domain.Entities.Enum;
 using SmartTollSystem.Domain.Interfaces;
 using System;
 using System.Collections.Generic;

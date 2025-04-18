@@ -1,4 +1,4 @@
-﻿using SmartTollSystem.Domain.Entities;
+﻿using SmartTollSystem.Domain.Entities.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;

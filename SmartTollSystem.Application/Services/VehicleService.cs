@@ -1,4 +1,6 @@
 ﻿using SmartTollSystem.Domain.DTOs;
+using SmartTollSystem.Domain.Entities;
+using SmartTollSystem.Domain.Entities.Enum;
 using SmartTollSystem.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -10,24 +12,70 @@ namespace SmartTollSystem.Application.Services
 {
     public class VehicleService : IVehicleService
     {
-        public Task<bool> DeleteVehicleAsync(string plate)
+       private readonly IUnitOfWork _unitOfWork;
+        public VehicleService(IUnitOfWork unitOfWork)
         {
-            throw new NotImplementedException();
+            _unitOfWork = unitOfWork;
+        }
+        public async Task<bool> DeleteVehicleAsync(string plate)
+        {
+            var vehicles = await _unitOfWork.VehicleRepository.FindAsync(p => p.LicensePlate == plate.ToUpper());
+            var vehicle = vehicles.FirstOrDefault();
+           
+            if (vehicle == null) return false;
+
+            await _unitOfWork.VehicleRepository.DeleteAsync(vehicle.VehicleId);
+            await _unitOfWork.SaveAsync();
+            return true;
         }
 
-        public Task<VehicleDto?> GetVehicleByPlateAsync(string plate)
+        public async Task<VehicleDto?> GetVehicleByPlateAsync(string plate)
         {
-            throw new NotImplementedException();
+            var vehicles = await _unitOfWork.VehicleRepository
+           .FindAsync(v => v.LicensePlate == plate.ToLower());
+
+            var vehicle = vehicles.FirstOrDefault();
+            if (vehicle == null)
+                return null;
+
+            return new VehicleDto
+            {
+                VehicleId = vehicle.VehicleId,
+                PlateNumber = vehicle.LicensePlate,
+                Type = vehicle.Type.ToString(),
+                OwnerId = vehicle.OwnerId ?? Guid.Empty,
+            };
         }
 
-        public Task<IEnumerable<VehicleDto>> GetVehiclesByUserAsync(Guid userId)
+        public async Task<IEnumerable<VehicleDto>> GetVehiclesByUserAsync(Guid userId)
         {
-            throw new NotImplementedException();
+            var vehicles = await _unitOfWork.VehicleRepository.FindAsync(v => v.OwnerId == userId);
+            var vehicleDtos = vehicles.Select(v => new VehicleDto
+            {
+                VehicleId = v.VehicleId,
+                PlateNumber = v.LicensePlate,
+                Type = v.Type.ToString(),
+                OwnerId = v.OwnerId ?? Guid.Empty,
+            });
+            return vehicleDtos;
         }
 
-        public Task<VehicleDto> RegisterVehicleAsync(VehicleDto vehicleDto)
+        public  async Task<VehicleDto> RegisterVehicleAsync(VehicleDto vehicleDto)
         {
-            throw new NotImplementedException();
+            var owner = await _unitOfWork.UserRepository.GetByIdAsync(vehicleDto.OwnerId);
+            if (owner == null)
+                throw new Exception("Owner not found");
+            var vehicle = new Vehicle
+            {
+                VehicleId = vehicleDto.VehicleId,
+                LicensePlate = vehicleDto.PlateNumber.ToUpper(),
+                Type = Enum.Parse<VehicleType>(vehicleDto.Type),
+                OwnerId = vehicleDto.OwnerId,
+            };
+            await _unitOfWork.VehicleRepository.AddAsync(vehicle);
+            await _unitOfWork.SaveAsync();
+            vehicleDto.VehicleId = vehicle.VehicleId;
+            return vehicleDto;
         }
     }
 }

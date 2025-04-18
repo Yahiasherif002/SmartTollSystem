@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SmartTollSystem.Domain.Entities
+namespace SmartTollSystem.Domain.Entities.Enum
 {
     public enum VehicleType
     {

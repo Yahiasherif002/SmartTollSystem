@@ -1,4 +1,5 @@
-﻿using SmartTollSystem.Domain.Entities.Identity;
+﻿using SmartTollSystem.Domain.Entities.Enum;
+using SmartTollSystem.Domain.Entities.Identity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

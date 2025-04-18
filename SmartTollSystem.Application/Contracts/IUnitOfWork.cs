@@ -1,4 +1,5 @@
 ﻿using SmartTollSystem.Domain.Entities;
+using SmartTollSystem.Domain.Entities.Identity;
 using SmartTollSystem.Domain.Repositories;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace SmartTollSystem.Domain.Interfaces
         IRepository<Vehicle> VehicleRepository { get; }
         IRepository<Radar> RadarRepository { get; }
         IRepository<Detection> DetectionRepository { get; }
-
+        IRepository<ApplicationUser> UserRepository { get; }
         Task<int> SaveAsync();
 
     }
