@@ -34,6 +34,8 @@ builder.Services.AddScoped<IVehicleService, VehicleService>();
 builder.Services.AddScoped<ITollService, TollService>();
 builder.Services.AddScoped<IDetectionService, DetectionService>();
 builder.Services.AddScoped<IWalletService, WalletService>();
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+builder.Services.AddHealthChecks();
 
 
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
