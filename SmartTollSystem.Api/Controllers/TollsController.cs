@@ -45,7 +45,7 @@ namespace SmartTollSystem.API.Controllers
 
         // 🔓 Radar or user: Pay toll using plate + radar
         [HttpPost("pay")]
-        [AllowAnonymous] // Or restrict by Radar IP if needed
+       // [AllowAnonymous] // Or restrict by Radar IP if needed
         public async Task<IActionResult> PayToll([FromBody] LicensePlateDto dto)
         {
             var result = await _tollService.ProcessTollAsync(dto);
