@@ -1,25 +1,26 @@
+# Use the official .NET SDK image to build the application
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
+WORKDIR /app
+EXPOSE 80
 
-
-# This stage is used to build the service project
+# Use the official .NET SDK image to build the application
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
-ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
+
+# Copy the .csproj file and restore any dependencies (via 'dotnet restore')
 COPY ["SmartTollSystem.Api/SmartTollSystem.Api.csproj", "SmartTollSystem.Api/"]
-COPY ["SmartTollSystem.Application/SmartTollSystem.Application.csproj", "SmartTollSystem.Application/"]
-COPY ["SmartTollSystem.Domain/SmartTollSystem.Domain.csproj", "SmartTollSystem.Domain/"]
-COPY ["SmartTollSystem.Infrastructure/SmartTollSystem.Infrastructure.csproj", "SmartTollSystem.Infrastructure/"]
-RUN dotnet restore "./SmartTollSystem.Api/SmartTollSystem.Api.csproj"
+RUN dotnet restore "SmartTollSystem.Api/SmartTollSystem.Api.csproj"
+
+# Copy the rest of the source code and build the application
 COPY . .
 WORKDIR "/src/SmartTollSystem.Api"
-RUN dotnet build "./SmartTollSystem.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "SmartTollSystem.Api.csproj" -c Release -o /app/build
 
-# This stage is used to publish the service project to be copied to the final stage
-FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./SmartTollSystem.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+# Publish the application to a folder
+RUN dotnet publish "SmartTollSystem.Api.csproj" -c Release -o /app/publish
 
-# This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
+# Define the entry point of the application
 FROM base AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --from=build /app/publish .
 ENTRYPOINT ["dotnet", "SmartTollSystem.Api.dll"]
