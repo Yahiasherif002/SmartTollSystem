@@ -1,4 +1,5 @@
-﻿using SmartTollSystem.Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore.Storage;
+using SmartTollSystem.Domain.Entities;
 using SmartTollSystem.Domain.Entities.Identity;
 using SmartTollSystem.Domain.Interfaces;
 using SmartTollSystem.Domain.Repositories;
@@ -13,6 +14,8 @@ namespace SmartTollSystem.Infrastructure.Data
     public class UnitOfWork : IUnitOfWork
     {
         private readonly AppDbContext _context;
+        private IDbContextTransaction _currentTransaction;
+
 
         private IRepository<Vehicle>? _vehicleRepository;
         private IRepository<Radar>? _radarleRepository;
@@ -23,6 +26,7 @@ namespace SmartTollSystem.Infrastructure.Data
         public UnitOfWork(AppDbContext context)
         {
             _context = context;
+            
         }
 
         public IRepository<Vehicle> VehicleRepository => _vehicleRepository ??= new Repository<Vehicle>(_context);
@@ -31,6 +35,31 @@ namespace SmartTollSystem.Infrastructure.Data
 
         public IRepository<Detection> DetectionRepository => _detectionRepository ??= new Repository<Detection>(_context);
         public IRepository<ApplicationUser> UserRepository => _userRepository ??= new Repository<ApplicationUser>(_context);
+
+        public async Task BeginTransactionAsync()
+        {
+            _currentTransaction = await _context.Database.BeginTransactionAsync();
+
+        }
+
+        public async Task CommitTransactionAsync()
+        {
+            if(_currentTransaction != null)
+    {
+                await _currentTransaction.CommitAsync();
+                await _currentTransaction.DisposeAsync();
+            }
+        }
+
+        public async Task RollbackTransactionAsync()
+        {
+            if (_currentTransaction != null)
+            {
+                await _currentTransaction.RollbackAsync();
+                await _currentTransaction.DisposeAsync();
+            }
+        }
+
         public async Task<int> SaveAsync()
         {
             return await _context.SaveChangesAsync();

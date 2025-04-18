@@ -73,5 +73,33 @@ namespace SmartTollSystem.Application.Services
                 Role = "User"
             };
         }
+        public async Task<UserDto?> UpdateUserEntityAsync(UserDto userDto)
+        {
+            var users = await _unitOfWork.UserRepository.FindAsync(u => u.Id == userDto.Id);
+            var user = users.FirstOrDefault();
+
+            if (user == null)
+                return null;
+
+            // Map updated values from DTO to entity
+            user.FullName = userDto.FullName;
+            user.Email = userDto.Email;
+           
+            // Add any other properties as needed
+
+            _unitOfWork.UserRepository.UpdateAsync(user);
+            await _unitOfWork.SaveAsync();
+
+            // Return updated DTO if needed
+            return new UserDto
+            {
+                Id = user.Id,
+                FullName = user.FullName,
+                Email = user.Email,
+               
+                // Map others as necessary
+            };
+        }
+
     }
 }

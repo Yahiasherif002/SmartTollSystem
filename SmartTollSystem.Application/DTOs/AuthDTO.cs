@@ -65,7 +65,7 @@ namespace SmartTollSystem.Application.DTOs
        // [RegularExpression(@"^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\d{4}$", ErrorMessage = " Invalid date format ")]
        // [Range(typeof(DateTime), "1900-01-01", "2100-12-31", ErrorMessage = " Date of birth must be between 1900 and 2100 ")]
         public DateTime DateOfBirth { get; set; }
-
+        [JsonIgnore]
         public  string? role { get; set; }
 
         [JsonIgnore]

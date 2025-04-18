@@ -20,7 +20,9 @@ namespace SmartTollSystem.Domain.Entities
         public string LicensePlate { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Vehicle type is required")]
-        public VehicleType Type { get; set; }
+        public VehicleType VehicleType { get; set; }
+
+        public string Type { get; set; } = string.Empty;
 
         public decimal Balance { get; set; }
         public Guid? OwnerId { get; set; }

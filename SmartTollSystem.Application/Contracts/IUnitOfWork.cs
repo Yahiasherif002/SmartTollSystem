@@ -16,6 +16,10 @@ namespace SmartTollSystem.Domain.Interfaces
         IRepository<Radar> RadarRepository { get; }
         IRepository<Detection> DetectionRepository { get; }
         IRepository<ApplicationUser> UserRepository { get; }
+
+        Task BeginTransactionAsync();
+        Task CommitTransactionAsync();
+        Task RollbackTransactionAsync();
         Task<int> SaveAsync();
 
     }

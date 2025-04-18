@@ -13,6 +13,6 @@ namespace SmartTollSystem.Domain.Interfaces
         Task<IEnumerable<UserDto>> GetAllUsersAsync();
         Task<bool> DeleteUserAsync(Guid userId);
         Task<bool> AssignRoleAsync(Guid userId, string role);
-
+        Task<UserDto?> UpdateUserEntityAsync(UserDto userDto);
     }
 }

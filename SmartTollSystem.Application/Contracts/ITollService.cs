@@ -12,5 +12,9 @@ namespace SmartTollSystem.Domain.Interfaces
     {
         Task<TollResultDto> ProcessTollAsync(LicensePlateDto licensePlateDto);
         Task<IEnumerable<TollHistoryDto>> GetTollHistoryAsync(Guid userId);
+
+        Task<IEnumerable<TollHistoryDto>> GetAllTollsAsync();
+        Task<TollHistoryDto?> GetTollByIdAsync(Guid id);
+
     }
 }

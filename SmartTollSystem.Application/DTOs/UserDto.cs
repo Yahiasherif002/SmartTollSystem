@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace SmartTollSystem.Domain.DTOs
@@ -11,6 +12,7 @@ namespace SmartTollSystem.Domain.DTOs
         public Guid Id { get; set; }
         public string FullName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
-        public string Role { get; set; } = "User";
+        [JsonIgnore]
+        public string Role { get; set; } = "VEHICLEOWNER";
     }
 }

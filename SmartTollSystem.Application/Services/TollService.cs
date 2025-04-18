@@ -38,10 +38,12 @@ namespace SmartTollSystem.Application.Services
 
         public async Task<TollResultDto> ProcessTollAsync(LicensePlateDto licensePlateDto)
         {
-            var vehicle = await _vehicleService.GetVehicleByPlateAsync(licensePlateDto.PlateNumber);
-            const decimal tollAmount = 5.00m;
+            const decimal tollAmount = 15.00m;
             const string location = "Toll Plaza 1";
-            if (vehicle == null)
+
+            var vehicleDto = await _vehicleService.GetVehicleByPlateAsync(licensePlateDto.PlateNumber);
+
+            if (vehicleDto == null)
             {
                 return new TollResultDto
                 {
@@ -54,7 +56,7 @@ namespace SmartTollSystem.Application.Services
                 };
             }
 
-            if (vehicle.VehicleType == VehicleType.Emergency)
+            if (vehicleDto.VehicleType == VehicleType.Emergency)
             {
                 return new TollResultDto
                 {
@@ -67,9 +69,44 @@ namespace SmartTollSystem.Application.Services
                 };
             }
 
+            // Get actual Vehicle entity
+            var vehicleEntity = (await _unitOfWork.VehicleRepository
+                .FindAsync(v => v.VehicleId == vehicleDto.VehicleId)).FirstOrDefault();
+
+            if (vehicleEntity == null)
+            {
+                return new TollResultDto
+                {
+                    PlateNumber = licensePlateDto.PlateNumber,
+                    Success = false,
+                    Message = "Vehicle data mismatch.",
+                    DeductedAmount = null,
+                    Date = DateTime.UtcNow,
+                    Location = location
+                };
+            }
+
+            if (vehicleEntity.Balance < tollAmount)
+            {
+                return new TollResultDto
+                {
+                    PlateNumber = licensePlateDto.PlateNumber,
+                    Success = false,
+                    Message = "Insufficient balance.",
+                    DeductedAmount = null,
+                    Date = DateTime.UtcNow,
+                    Location = location
+                };
+            }
+
+            // Deduct the balance
+            vehicleEntity.Balance -= tollAmount;
+            _unitOfWork.VehicleRepository.UpdateAsync(vehicleEntity);
+
+            // Save toll history
             var tollHistory = new TollHistory
             {
-                VehicleId = vehicle.VehicleId,
+                VehicleId = vehicleEntity.VehicleId,
                 Timestamp = DateTime.UtcNow,
                 TollAmount = tollAmount,
                 Location = location
@@ -87,8 +124,34 @@ namespace SmartTollSystem.Application.Services
                 Date = tollHistory.Timestamp,
                 Location = location
             };
+        }
 
 
+
+        public async Task<IEnumerable<TollHistoryDto>> GetAllTollsAsync()
+        {
+            var tolls = await _unitOfWork.TollRepository.GetAllAsync();
+            return tolls.Select(t => new TollHistoryDto
+            {
+                PlateNumber = t.Vehicle?.LicensePlate ?? "Unknown",
+                Amount = t.TollAmount,
+                Timestamp = t.Timestamp,
+                Location = t.Location
+            });
+        }
+
+        public async Task<TollHistoryDto?> GetTollByIdAsync(Guid id)
+        {
+            var toll = await _unitOfWork.TollRepository.GetByIdAsync(id);
+            if (toll == null) return null;
+
+            return new TollHistoryDto
+            {
+                PlateNumber = toll.Vehicle?.LicensePlate ?? "Unknown",
+                Amount = toll.TollAmount,
+                Timestamp = toll.Timestamp,
+                Location = toll.Location
+            };
         }
     }
 }
