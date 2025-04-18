@@ -11,6 +11,7 @@ using SmartTollSystem.Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Builder;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -168,6 +169,7 @@ using (var scope = app.Services.CreateScope())
         }
     }
 }
+    app.UseHealthChecks("/health");
 
 // Configure middleware
 if (app.Environment.IsDevelopment())
