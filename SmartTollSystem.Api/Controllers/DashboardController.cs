@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SmartTollSystem.Domain.DTOs;
 using SmartTollSystem.Domain.Interfaces;
 using System;
 using System.Linq;
@@ -13,11 +14,13 @@ namespace SmartTollSystem.Api.Controllers
 
     public class DashboardController : ControllerBase
     {
+        private readonly IUserService _userService;
         private readonly IUnitOfWork _unitOfWork;
 
-        public DashboardController(IUnitOfWork unitOfWork)
+        public DashboardController(IUnitOfWork unitOfWork, IUserService userService)
         {
             _unitOfWork = unitOfWork;
+            _userService = userService;
         }
 
         [HttpGet("users/count")]
@@ -27,9 +30,9 @@ namespace SmartTollSystem.Api.Controllers
             return Ok(users.Count());
         }
         [HttpGet("users")]
-        public async Task<IActionResult> GetUser()
+        public async Task<IActionResult> GetUsers()
         {
-            var users = await _unitOfWork.UserRepository.GetAllAsync();
+            var users = await _userService.GetAllUsersWithVehiclesAsync();
             return Ok(users);
         }
         [HttpGet("vehicles/count")]

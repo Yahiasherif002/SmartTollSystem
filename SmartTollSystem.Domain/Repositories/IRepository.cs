@@ -15,5 +15,8 @@ namespace SmartTollSystem.Domain.Repositories
         Task AddAsync(TEntity entity);
         Task UpdateAsync(TEntity entity);
         Task DeleteAsync(Guid id);
+        Task<IList<TEntity>> GetWithIncludeAsync(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includeProperties);
+
+
     }    
 }

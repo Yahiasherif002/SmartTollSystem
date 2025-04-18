@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using SmartTollSystem.Domain.DTOs;
 using SmartTollSystem.Domain.Entities.Identity;
 using SmartTollSystem.Domain.Interfaces;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace SmartTollSystem.Application.Services
 {
-    internal class UserService : IUserService
+    public class UserService : IUserService
     {
        
         private readonly IUnitOfWork _unitOfWork;
@@ -100,6 +101,29 @@ namespace SmartTollSystem.Application.Services
                 // Map others as necessary
             };
         }
+        public async Task<List<UserDto>> GetAllUsersWithVehiclesAsync()
+        {
+            var users = await _unitOfWork.UserRepository.GetWithIncludeAsync(
+                u => true, 
+                u => u.Vehicles 
+            );
+
+            // Map the users and their vehicles to DTOs
+            return users.Select(u => new UserDto
+            {
+                Id = u.Id,
+                FullName = u.FullName,
+                Email = u.Email,
+                Vehicles = u.Vehicles.Select(v => new VehicleDto
+                {
+                    PlateNumber = v.LicensePlate,
+                    Type = v.Type 
+                }).ToList()
+            }).ToList();
+        }
+
+
+
 
     }
 }

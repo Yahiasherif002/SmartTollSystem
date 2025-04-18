@@ -125,6 +125,108 @@ namespace SmartTollSystem.Application.Services
                 Location = location
             };
         }
+        public async Task<TollResultDto> ProcessTollAsyncV1(LicensePlateDto licensePlateDto)
+        {
+            const decimal tollAmount = 15.00m; // الرسوم العادية للمركبات المسجلة
+            const decimal unregisteredFee = 50.00m; // الغرامة للمركبات غير المسجلة
+            var locations = new[] { "Mansoura-gamsa", "AlesRoad", "BanhaST", "Al-Alamin" }; // Array of locations
+            var random = new Random();
+            var location = locations[random.Next(locations.Length)]; // Select a random location
+
+            var currentDateTime = DateTime.UtcNow;
+
+            // محاولة الحصول على السيارة باستخدام لوحة الترخيص
+            var vehicleDto = await _vehicleService.GetVehicleByPlateAsync(licensePlateDto.PlateNumber);
+
+            // إذا لم يتم العثور على السيارة (مركبة غير مسجلة)
+            if (vehicleDto == null)
+            {
+                // إذا كانت المركبة غير مسجلة، نفرض غرامة
+                return new TollResultDto
+                {
+                    PlateNumber = licensePlateDto.PlateNumber,
+                    Success = false,
+                    Message = "Vehicle not registered. Additional fee applied.",
+                    DeductedAmount = unregisteredFee,
+                    Date = DateTime.UtcNow,
+                    Location = location
+                };
+            }
+
+            // إذا كانت المركبة من نوع طوارئ، يتم إعفاءها من الرسوم
+            if (vehicleDto.VehicleType == VehicleType.Emergency)
+            {
+                return new TollResultDto
+                {
+                    PlateNumber = licensePlateDto.PlateNumber,
+                    Success = true,
+                    Message = "Emergency vehicle – toll exempted.",
+                    DeductedAmount = 0m,
+                    Date = DateTime.UtcNow,
+                    Location = location
+                };
+            }
+
+            // الحصول على كيان السيارة الفعلي
+            var vehicleEntity = (await _unitOfWork.VehicleRepository
+                .FindAsync(v => v.VehicleId == vehicleDto.VehicleId)).FirstOrDefault();
+
+            // إذا كانت السيارة مسجلة، نقوم بالتحقق من الرصيد
+            if (vehicleEntity != null)
+            {
+                if (vehicleEntity.Balance < tollAmount)
+                {
+                    return new TollResultDto
+                    {
+                        PlateNumber = licensePlateDto.PlateNumber,
+                        Success = false,
+                        Message = "Insufficient balance.",
+                        DeductedAmount = null,
+                        Date = DateTime.UtcNow,
+                        Location = location
+                    };
+                }
+
+                // خصم الرسوم العادية للمركبات المسجلة
+                vehicleEntity.Balance -= tollAmount;
+                _unitOfWork.VehicleRepository.UpdateAsync(vehicleEntity);
+
+                // حفظ تاريخ الرسوم
+                var tollHistory = new TollHistory
+                {
+                    VehicleId = vehicleEntity.VehicleId,
+                    Timestamp = currentDateTime,
+                    TollAmount = tollAmount,
+                    Location = location
+                };
+
+                await _unitOfWork.TollRepository.AddAsync(tollHistory);
+                await _unitOfWork.SaveAsync();
+
+                return new TollResultDto
+                {
+                    PlateNumber = licensePlateDto.PlateNumber,
+                    Success = true,
+                    Message = "Toll deducted successfully.",
+                    DeductedAmount = tollAmount,
+                    Date = tollHistory.Timestamp,
+                    Location = location
+                };
+            }
+            else
+            {
+                // إذا كانت السيارة غير مسجلة، نفرض الغرامة
+                return new TollResultDto
+                {
+                    PlateNumber = licensePlateDto.PlateNumber,
+                    Success = false,
+                    Message = "Vehicle not found. Additional fee applied for unregistered vehicle.",
+                    DeductedAmount = unregisteredFee,
+                    Date = DateTime.UtcNow,
+                    Location = location
+                };
+            }
+        }
 
 
 

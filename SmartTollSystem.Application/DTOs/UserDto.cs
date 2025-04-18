@@ -14,5 +14,8 @@ namespace SmartTollSystem.Domain.DTOs
         public string Email { get; set; } = string.Empty;
         [JsonIgnore]
         public string Role { get; set; } = "VEHICLEOWNER";
+
+        public List<VehicleDto> Vehicles { get; set; }
+
     }
 }

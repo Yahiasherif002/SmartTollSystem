@@ -1,4 +1,5 @@
 ﻿using SmartTollSystem.Domain.DTOs;
+using SmartTollSystem.Domain.Entities.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +15,7 @@ namespace SmartTollSystem.Domain.Interfaces
         Task<bool> DeleteUserAsync(Guid userId);
         Task<bool> AssignRoleAsync(Guid userId, string role);
         Task<UserDto?> UpdateUserEntityAsync(UserDto userDto);
+        Task<List<UserDto>> GetAllUsersWithVehiclesAsync();
+
     }
 }

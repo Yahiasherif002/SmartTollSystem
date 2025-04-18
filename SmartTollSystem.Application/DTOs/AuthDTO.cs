@@ -30,26 +30,25 @@ namespace SmartTollSystem.Application.DTOs
         [Compare("Password", ErrorMessage = " Password and Confirm password do not match ")]
         public string ConfirmPassword { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = " Address cannot be blank ")]
-        [StringLength(200, MinimumLength = 5)]
-        [RegularExpression(@"^[a-zA-Z0-9\s,.'-]{5,200}$", ErrorMessage = " Invalid address format ")]
-        public string Address { get; set; } = string.Empty;
-        [Required(ErrorMessage = " City cannot be blank ")]
-        [StringLength(100, MinimumLength = 2)]
-        [RegularExpression(@"^[a-zA-Z\s-]{2,100}$", ErrorMessage = " Invalid city format ")]
-        public string City { get; set; } = string.Empty;
-        [Required(ErrorMessage = " State cannot be blank ")]
-        [StringLength(100, MinimumLength = 2)]
-        public string State { get; set; } = string.Empty;
-        [Required(ErrorMessage = " Zip code cannot be blank ")]
-        [StringLength(20, MinimumLength = 5)]
-        [RegularExpression(@"^\d{5}(-\d{4})?$", ErrorMessage = " Invalid zip code format ")]
-        [DataType(DataType.PostalCode)]
-        [Display(Name = "Zip Code")]
-        public string ZipCode { get; set; } = string.Empty;
-        [Required(ErrorMessage = " Country cannot be blank ")]
-        [StringLength(100, MinimumLength = 2)]
-        public string Country { get; set; } = string.Empty;
+        //[Required(ErrorMessage = " Address cannot be blank ")]
+        //[StringLength(200, MinimumLength = 5)]
+        //[RegularExpression(@"^[a-zA-Z0-9\s,.'-]{5,200}$", ErrorMessage = " Invalid address format ")]
+        //public string Address { get; set; } = string.Empty;
+        //[Required(ErrorMessage = " City cannot be blank ")]
+        //[StringLength(100, MinimumLength = 2)]
+        //[RegularExpression(@"^[a-zA-Z\s-]{2,100}$", ErrorMessage = " Invalid city format ")]
+        //public string City { get; set; } = string.Empty;
+        //[Required(ErrorMessage = " State cannot be blank ")]
+        //[StringLength(100, MinimumLength = 2)]
+        //public string State { get; set; } = string.Empty;
+       
+        //[RegularExpression(@"^\d{5}(-\d{4})?$", ErrorMessage = " Invalid zip code format ")]
+        //[DataType(DataType.PostalCode)]
+        //[Display(Name = "Zip Code")]
+        //public string ZipCode { get; set; } = string.Empty;
+        //[Required(ErrorMessage = " Country cannot be blank ")]
+        //[StringLength(100, MinimumLength = 2)]
+        //public string Country { get; set; } = string.Empty;
 
         [Required(ErrorMessage = " Phone number cannot be blank ")]
         [StringLength(15, MinimumLength = 10)]
@@ -58,17 +57,14 @@ namespace SmartTollSystem.Application.DTOs
         [Display(Name = "Phone Number")]
         [Phone(ErrorMessage = " Invalid phone number format ")]
         public string PhoneNumber { get; set; } = string.Empty;
-        [Required(ErrorMessage = " Date of birth cannot be blank ")]
-        [DataType(DataType.Date)]
-        [Display(Name = "Date of Birth")]
-        //[DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        //[Required(ErrorMessage = " Date of birth cannot be blank ")]
+        //[DataType(DataType.Date)]
+        //[Display(Name = "Date of Birth")]
+        ////[DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
        // [RegularExpression(@"^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\d{4}$", ErrorMessage = " Invalid date format ")]
        // [Range(typeof(DateTime), "1900-01-01", "2100-12-31", ErrorMessage = " Date of birth must be between 1900 and 2100 ")]
-        public DateTime DateOfBirth { get; set; }
-        [JsonIgnore]
-        public  string? role { get; set; }
-
-        [JsonIgnore]
+       // public DateTime DateOfBirth { get; set; }
+      
         public List<VehicleDto>? Vehicles { get; set; } = new List<VehicleDto>();
     }
     public record UserLoginDTO

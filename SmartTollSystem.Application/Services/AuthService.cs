@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using SmartTollSystem.Application.Contracts;
 using SmartTollSystem.Application.DTOs;
 using SmartTollSystem.Domain.Entities.Identity;
+using SmartTollSystem.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -21,24 +22,19 @@ namespace SmartTollSystem.Application.Services
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly IConfiguration _configuration;
-        public AuthService(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager,IConfiguration configuration)
+        private readonly IVehicleService _vehicleService;
+        public AuthService(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager,IConfiguration configuration, IVehicleService vehicleService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _configuration = configuration;
+            _vehicleService = vehicleService;
         }
 
 
         public async Task<AuthResultDto> RegisterAsync(UserRegisterDTO userRegisterDTO)
         {
-            if (string.IsNullOrWhiteSpace(userRegisterDTO.role))
-            {
-                return new AuthResultDto(
-                    Token: string.Empty,
-                    Success: false,
-                    Message: "Role cannot be null or empty."
-                );
-            }
+            
 
             var user = new ApplicationUser
             {
@@ -51,8 +47,21 @@ namespace SmartTollSystem.Application.Services
             var result = await _userManager.CreateAsync(user, userRegisterDTO.Password);
             if (result.Succeeded)
             {
-                await _userManager.AddToRoleAsync(user, userRegisterDTO.role);
-                return new AuthResultDto(GenerateToken(user), true, Message: "User registered successfully");
+                
+
+                // Register vehicles if any are provided
+                if (userRegisterDTO.Vehicles != null)
+                {
+                    foreach (var vehicleDto in userRegisterDTO.Vehicles)
+                    {
+                        // Set the OwnerId to the registered user's UserId
+                        vehicleDto.OwnerId = user.Id;
+                        // Register the vehicle
+                        await _vehicleService.RegisterVehicleAsync(vehicleDto);
+                    }
+                }
+
+                return new AuthResultDto(GenerateToken(user), true, "User registered successfully");
             }
 
             return new AuthResultDto(
@@ -62,7 +71,7 @@ namespace SmartTollSystem.Application.Services
             );
         }
 
-        
+
 
         public async Task<AuthResultDto> LoginAsync(UserLoginDTO userLoginDTO)
         {

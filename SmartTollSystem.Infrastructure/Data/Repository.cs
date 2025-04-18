@@ -20,6 +20,20 @@ namespace SmartTollSystem.Infrastructure.Data
             _dbSet = _context.Set<TEntity>();
         }
 
+        public async Task<IList<TEntity>> GetWithIncludeAsync(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includeProperties)
+        {
+            IQueryable<TEntity> query = _dbSet;
+
+            // Apply includes
+            foreach (var includeProperty in includeProperties)
+            {
+                query = query.Include(includeProperty);
+            }
+
+            return await query.Where(predicate).ToListAsync();
+        }
+
+
         public async Task<TEntity> GetByIdAsync(Guid id)
         {
             var entity = await _dbSet.FindAsync(id);

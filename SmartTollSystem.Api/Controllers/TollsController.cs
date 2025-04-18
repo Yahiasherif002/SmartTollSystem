@@ -48,7 +48,7 @@ namespace SmartTollSystem.API.Controllers
        // [AllowAnonymous] // Or restrict by Radar IP if needed
         public async Task<IActionResult> PayToll([FromBody] LicensePlateDto dto)
         {
-            var result = await _tollService.ProcessTollAsync(dto);
+            var result = await _tollService.ProcessTollAsyncV1(dto);
             return Ok(result);
         }
 
