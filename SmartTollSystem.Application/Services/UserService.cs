@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Identity;
 using SmartTollSystem.Domain.DTOs;
 using SmartTollSystem.Domain.Entities.Identity;
 using SmartTollSystem.Domain.Interfaces;
@@ -14,9 +15,29 @@ namespace SmartTollSystem.Application.Services
     {
        
         private readonly IUnitOfWork _unitOfWork;
-        public UserService(IUnitOfWork unitOfWork)
-        {
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<ApplicationRole> _roleManager;
+        public UserService(IUnitOfWork unitOfWork , UserManager<ApplicationUser> userManager,RoleManager<ApplicationRole> roleManager)
+        {                                          
             _unitOfWork = unitOfWork;
+            _userManager = userManager;
+            _roleManager = roleManager;
+        }
+
+        public Task<bool> AssignRoleAsync(Guid userId, string role)
+        {
+            var user = _unitOfWork.UserRepository.GetByIdAsync(userId);
+            if (user == null) return Task.FromResult(false);
+            var roleExists = _roleManager.RoleExistsAsync(role);
+            if (!roleExists.Result) return Task.FromResult(false);
+            var result = _userManager.AddToRoleAsync(user.Result, role);
+            if (result.Result.Succeeded)
+            {
+
+                return Task.FromResult(true);
+            }
+            return Task.FromResult(false);
+
         }
 
         public async Task<bool> DeleteUserAsync(Guid userId)
