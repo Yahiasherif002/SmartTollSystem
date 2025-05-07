@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "SmartToll.Benchmark": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}

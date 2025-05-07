@@ -12,6 +12,7 @@ namespace SmartTollSystem.Domain.Entities.Enum
         Truck,
         Motorcycle,
         Bus,
-        Emergency
+        Emergency,
+        Other
     }
 }

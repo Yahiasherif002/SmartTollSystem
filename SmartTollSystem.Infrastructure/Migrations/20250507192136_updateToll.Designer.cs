@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartTollSystem.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using SmartTollSystem.Infrastructure.Data;
 namespace SmartTollSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250507192136_updateToll")]
+    partial class updateToll
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -250,44 +253,6 @@ namespace SmartTollSystem.Infrastructure.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("SmartTollSystem.Domain.Entities.Invoice", b =>
-                {
-                    b.Property<Guid>("InvoiceId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsPaid")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Location")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PlateNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("TollHistoryId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("VehicleId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("InvoiceId");
-
-                    b.HasIndex("TollHistoryId");
-
-                    b.HasIndex("VehicleId");
-
-                    b.ToTable("Invoices");
-                });
-
             modelBuilder.Entity("SmartTollSystem.Domain.Entities.Radar", b =>
                 {
                     b.Property<Guid>("RadarId")
@@ -431,23 +396,6 @@ namespace SmartTollSystem.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Radar");
-
-                    b.Navigation("Vehicle");
-                });
-
-            modelBuilder.Entity("SmartTollSystem.Domain.Entities.Invoice", b =>
-                {
-                    b.HasOne("SmartTollSystem.Domain.Entities.TollHistory", "TollHistory")
-                        .WithMany()
-                        .HasForeignKey("TollHistoryId");
-
-                    b.HasOne("SmartTollSystem.Domain.Entities.Vehicle", "Vehicle")
-                        .WithMany()
-                        .HasForeignKey("VehicleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("TollHistory");
 
                     b.Navigation("Vehicle");
                 });

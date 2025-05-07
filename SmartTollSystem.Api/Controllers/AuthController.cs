@@ -14,6 +14,11 @@ namespace SmartTollSystem.Api.Controllers
         {
             _authService = authService;
         }
+        /// <summary>
+        /// Register a new user
+        /// </summary>
+        /// <param name="userRegisterDTO"></param>
+        /// <returns></returns>
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserRegisterDTO userRegisterDTO)
         {
@@ -24,6 +29,11 @@ namespace SmartTollSystem.Api.Controllers
             }
             return BadRequest(result);
         }
+        /// <summary>
+        /// Login a user
+        /// </summary>
+        /// <param name="userLoginDTO"></param>
+        /// <returns></returns>
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserLoginDTO userLoginDTO)
         {
@@ -34,6 +44,11 @@ namespace SmartTollSystem.Api.Controllers
             }
             return BadRequest(result);
         }
+        /// <summary>
+        /// Get user ID from token
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
         [HttpGet("userId")]
         public async Task<IActionResult> GetUserIdFromToken(string token)
         {
@@ -44,6 +59,11 @@ namespace SmartTollSystem.Api.Controllers
             }
             return BadRequest("Invalid token");
         }
+        /// <summary>
+        /// Get user role from token
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
         [HttpGet("role")]
         public async Task<IActionResult> GetRoleFromToken(string token)
         {
@@ -54,6 +74,11 @@ namespace SmartTollSystem.Api.Controllers
             }
             return BadRequest("Invalid token");
         }
+        /// <summary>
+        /// Get expiration date from token
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
         [HttpGet("expiration")]
         public async Task<IActionResult> GetExpirationDateFromToken(string token)
         {

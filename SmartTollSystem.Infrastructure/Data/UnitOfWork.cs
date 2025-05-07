@@ -22,6 +22,7 @@ namespace SmartTollSystem.Infrastructure.Data
         private IRepository<TollHistory>? _tollRepository;
         private IRepository<Detection>? _detectionRepository;
         private IRepository<ApplicationUser>? _userRepository;
+        private IRepository<Invoice>? _invoiceRepository;
 
         public UnitOfWork(AppDbContext context)
         {
@@ -35,6 +36,7 @@ namespace SmartTollSystem.Infrastructure.Data
 
         public IRepository<Detection> DetectionRepository => _detectionRepository ??= new Repository<Detection>(_context);
         public IRepository<ApplicationUser> UserRepository => _userRepository ??= new Repository<ApplicationUser>(_context);
+        public IRepository<Invoice> InvoiceRepository => _invoiceRepository ??= new Repository<Invoice>(_context);
 
         public async Task BeginTransactionAsync()
         {

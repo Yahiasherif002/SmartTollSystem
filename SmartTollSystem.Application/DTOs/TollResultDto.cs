@@ -16,5 +16,7 @@ namespace SmartTollSystem.Application.DTOs
         public DateTime? Date { get; set; }
         public string Location { get; set; } = string.Empty;
 
+        public Guid? InvoiceId { get; set; }
+
     }
 }

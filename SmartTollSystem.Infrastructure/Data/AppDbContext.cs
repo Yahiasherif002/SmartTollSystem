@@ -19,6 +19,7 @@ namespace SmartTollSystem.Infrastructure.Data
         public DbSet<TollHistory> TollHistories { get; set; }
         public DbSet<Radar> Radars { get; set; }
         public DbSet<Detection> Detections { get; set; }
+        public DbSet<Invoice> Invoices { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

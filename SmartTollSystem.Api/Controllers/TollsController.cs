@@ -21,6 +21,10 @@ namespace SmartTollSystem.API.Controllers
             _tollService = tollService;
         }
 
+        /// <summary>
+        /// Get all toll transactions
+        /// </summary>
+        /// <returns></returns>
         // 🔓 Admin: Get all toll transactions
         [HttpGet]
         [Authorize(Roles = "Admin")]
@@ -31,6 +35,10 @@ namespace SmartTollSystem.API.Controllers
         }
 
         // 🔒 Logged-in vehicle owner: Get my toll history
+        /// <summary>
+        /// Get my toll history
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("my")]
         [Authorize(Roles = "User")]
         public async Task<IActionResult> GetMyTolls()
@@ -44,8 +52,13 @@ namespace SmartTollSystem.API.Controllers
         }
 
         // 🔓 Radar or user: Pay toll using plate + radar
+        /// <summary>
+        /// Pay toll using plate number
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
         [HttpPost("pay")]
-       // [AllowAnonymous] // Or restrict by Radar IP if needed
+       
         public async Task<IActionResult> PayToll([FromBody] LicensePlateDto dto)
         {
             var result = await _tollService.ProcessTollAsyncV1(dto);
@@ -53,8 +66,14 @@ namespace SmartTollSystem.API.Controllers
         }
 
         // 🔓 Admin: Get toll by ID
+        /// <summary>
+        /// Get a toll transaction by its ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> GetTollById(Guid id)
         {
             var toll = await _tollService.GetTollByIdAsync(id);

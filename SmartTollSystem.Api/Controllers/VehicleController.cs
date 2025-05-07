@@ -17,7 +17,11 @@ namespace SmartTollSystem.Api.Controllers
             _vehicleService = vehicleService;
         }
 
-
+        /// <summary>
+        /// Get vehicle by plate number
+        /// </summary>
+        /// <param name="plate"></param>
+        /// <returns></returns>
         [HttpGet("{plate}")]
         public async Task<IActionResult> GetVehicleByPlate(string plate)
         {
@@ -28,6 +32,11 @@ namespace SmartTollSystem.Api.Controllers
             }
             return Ok(vehicle);
         }
+        /// <summary>
+        /// Get vehicle by logged in user
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         [Authorize] 
         [HttpGet("user/{userId}/vehicle")]
         public async Task<IActionResult> GetLoggedInUserVehicle(Guid userId)
@@ -40,7 +49,11 @@ namespace SmartTollSystem.Api.Controllers
             return Ok(vehicle);
 
         }
-        
+        /// <summary>
+        /// Get all vehicles
+        /// </summary>
+        /// <returns></returns>
+
         [HttpGet("vehicles")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllVehicles()
@@ -48,7 +61,11 @@ namespace SmartTollSystem.Api.Controllers
             var vehicles = await _vehicleService.GetAllVehiclesAsync();
             return Ok(vehicles);
         }
-
+        /// <summary>
+        /// Get vehicles by user ID
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         [HttpGet("user/{userId}/vehicles")]
         [HttpGet("user/{userId}")]
         public async Task<IActionResult> GetVehiclesByUser(Guid userId)
@@ -56,6 +73,11 @@ namespace SmartTollSystem.Api.Controllers
             var vehicles = await _vehicleService.GetVehiclesByUserAsync(userId);
             return Ok(vehicles);
         }
+        /// <summary>
+        /// Register a new vehicle
+        /// </summary>
+        /// <param name="vehicleDto"></param>
+        /// <returns></returns>
 
 
         [HttpPost("Register")]
@@ -78,6 +100,11 @@ namespace SmartTollSystem.Api.Controllers
             return CreatedAtAction(nameof(GetVehicleByPlate), new { plate = createdVehicle.PlateNumber }, createdVehicle);
         }
 
+        /// <summary>
+        /// Delete a vehicle by plate number
+        /// </summary>
+        /// <param name="plate"></param>
+        /// <returns></returns>
 
         [HttpDelete("{plate}")]
         public async Task<IActionResult> DeleteVehicle(string plate)
@@ -89,6 +116,12 @@ namespace SmartTollSystem.Api.Controllers
             }
             return NoContent();
         }
+        /// <summary>
+        /// Update vehicle details
+        /// </summary>
+        /// <param name="vehicleId"></param>
+        /// <param name="vehicleDto"></param>
+        /// <returns></returns>
         [HttpPut("{vehicleId}")]
         public async Task<IActionResult> UpdateVehicle(Guid vehicleId, [FromBody] VehicleDto vehicleDto)
         {

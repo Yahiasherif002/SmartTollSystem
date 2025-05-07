@@ -16,6 +16,10 @@ namespace SmartTollSystem.Api.Controllers
         {
             _walletService = walletService;
         }
+        /// <summary>
+        /// Get wallet balance
+        /// </summary>
+        /// <returns></returns>
         // 🔒 User: Get wallet balance
         [HttpGet("balance")]
         [Authorize(Roles = "User")]
@@ -28,6 +32,11 @@ namespace SmartTollSystem.Api.Controllers
             return Ok(new { Balance = balance });
         }
         // 🔒 User: Add funds to wallet
+        /// <summary>
+        /// Add funds to wallet
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
         [HttpPost("add-funds")]
         [Authorize]
         public async Task<IActionResult> AddFunds([FromBody] TopUpDto dto)

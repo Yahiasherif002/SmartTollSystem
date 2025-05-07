@@ -18,6 +18,10 @@ namespace SmartTollSystem.Api.Controllers
             _radarService = radarService;
         }
         // 🔓 Radar: Get all vehicles
+        /// <summary>
+        /// Get all radars
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("radars")]
         public async Task<IActionResult> GetAll()
         {
@@ -25,6 +29,11 @@ namespace SmartTollSystem.Api.Controllers
             return Ok(radars);
         }
         // 🔓 Radar: Get vehicle by plate
+        /// <summary>
+        /// Get a radar by its ID
+        /// </summary>
+        /// <param name="id">radar id</param>
+        /// <returns></returns>
         [HttpGet("radar/{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
@@ -35,6 +44,11 @@ namespace SmartTollSystem.Api.Controllers
             }
             return Ok(radar);
         }
+        /// <summary>
+        /// create new radar
+        /// </summary>
+        /// <param name="radarDto"></param>
+        /// <returns></returns>
         // 🔒 Radar: Create radar
         [HttpPost("radar")]
 

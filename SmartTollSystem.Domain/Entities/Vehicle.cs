@@ -22,6 +22,7 @@ namespace SmartTollSystem.Domain.Entities
         [Required(ErrorMessage = "Vehicle type is required")]
         public VehicleType VehicleType { get; set; }
 
+        public bool NeedsConfirmation { get; set; }
         public string Type { get; set; } = string.Empty;
 
         public decimal Balance { get; set; }

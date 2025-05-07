@@ -17,15 +17,21 @@ namespace SmartTollSystem.Api.Controllers
         {
             _userService = userService;
         }
-        // 🔒 Admin: Get all users
+        /// <summary>
+        /// get all users
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("users")]
         public async Task<IActionResult> GetAllUsers()
         {
             var users = await _userService.GetAllUsersAsync();
             return Ok(users);
         }
-
-        // 🔒 Admin: Get user by ID
+        /// <summary>
+        /// return specific user
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("user/{id}")]
         public async Task<IActionResult> GetUserById(Guid id)
         {
@@ -36,8 +42,12 @@ namespace SmartTollSystem.Api.Controllers
             }
             return Ok(user);
         }
-
-        // 🔒 Admin: Update user
+        /// <summary>
+        /// Update user details
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="userDto"></param>
+        /// <returns></returns>
         [HttpPut("user/{id}")]
         public async Task<IActionResult> UpdateUser(Guid id, [FromBody] UserDto userDto)
         {
@@ -52,7 +62,11 @@ namespace SmartTollSystem.Api.Controllers
             }
             return Ok(updatedUser);
         }
-        // 🔒 Admin: Delete user
+        /// <summary>
+        /// Delete a user by ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("user/{id}")]
         public async Task<IActionResult> DeleteUser(Guid id)
         {
@@ -64,7 +78,12 @@ namespace SmartTollSystem.Api.Controllers
             return NoContent();
         }
 
-        //AssignRoleAsync
+        /// <summary>
+        /// Assign a role to a user
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="roleName"></param>
+        /// <returns></returns>
         [HttpPost("user/{userId}/role/{roleName}")]
         public async Task<IActionResult> AssignRoleToUser(Guid userId, string roleName)
         {

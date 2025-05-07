@@ -23,24 +23,40 @@ namespace SmartTollSystem.Api.Controllers
             _userService = userService;
         }
 
+        /// <summary>
+        ///     Get the count of all users
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("users/count")]
         public async Task<IActionResult> GetUserCount()
         {
             var users = await _unitOfWork.UserRepository.GetAllAsync();
             return Ok(users.Count());
         }
+        /// <summary>
+        ///   Get all users with their vehicles
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("users")]
         public async Task<IActionResult> GetUsers()
         {
             var users = await _userService.GetAllUsersWithVehiclesAsync();
             return Ok(users);
         }
+        /// <summary>
+        ///   Get the count of all vehicles
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("vehicles/count")]
         public async Task<IActionResult> GetVehicleCount()
         {
             var vehicles = await _unitOfWork.VehicleRepository.GetAllAsync();
             return Ok(vehicles.Count());
         }
+        /// <summary>
+        ///   Get the count of all tolls
+        /// </summary>
+        /// <returns></returns>
 
         [HttpGet("tolls/count")]
         public async Task<IActionResult> GetTollCount()
@@ -48,6 +64,10 @@ namespace SmartTollSystem.Api.Controllers
             var tolls = await _unitOfWork.TollRepository.GetAllAsync();
             return Ok(tolls.Count());
         }
+        /// <summary>
+        ///   Get the total revenue from all tolls
+        /// </summary>
+        /// <returns></returns>
 
         [HttpGet("revenue/total")]
         public async Task<IActionResult> GetTotalRevenue()
@@ -56,7 +76,10 @@ namespace SmartTollSystem.Api.Controllers
             var revenue = tolls.Sum(t => t.TollAmount);
             return Ok(revenue);
         }
-
+        /// <summary>
+        ///   Get the total revenue from tolls today
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("revenue/today")]
         public async Task<IActionResult> GetTodayRevenue()
         {
@@ -67,6 +90,10 @@ namespace SmartTollSystem.Api.Controllers
                 .Sum(t => t.TollAmount);
             return Ok(todayRevenue);
         }
+        /// <summary>
+        ///   Get the count of transactions today
+        /// </summary>
+        /// <returns></returns>
 
         [HttpGet("transactions/today")]
         public async Task<IActionResult> GetTodayTransactionCount()
