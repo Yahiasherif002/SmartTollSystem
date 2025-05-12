@@ -40,7 +40,7 @@ namespace SmartTollSystem.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("my")]
-        [Authorize(Roles = "User")]
+        [Authorize]
         public async Task<IActionResult> GetMyTolls()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
