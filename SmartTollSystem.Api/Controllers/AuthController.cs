@@ -95,13 +95,11 @@ namespace SmartTollSystem.Api.Controllers
         [HttpGet("currentUser")]
         public async Task<IActionResult> GetCurrentUser()
         {
-            var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-            var currentUser = await _authService.GetCurrentUserAsync(token);
-            if (currentUser != null)
-            {
-                return Ok(currentUser);
-            }
-            return BadRequest("Invalid token");
+            var authHeader = Request.Headers["Authorization"].ToString();
+            var userDto = await _authService.GetCurrentUserAsync(authHeader);
+            if (userDto == null)
+                return Unauthorized();
+            return Ok(userDto);
         }
 
     }
