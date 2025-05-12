@@ -10,7 +10,7 @@ namespace SmartTollSystem.Application.DTOs
     public class TopUpDto
     {
         [JsonIgnore]
-        public Guid VehicleId { get; set; }
+        public Guid UserId { get; set; }
         public decimal Amount { get; set; }
     }
 }

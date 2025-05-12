@@ -19,35 +19,53 @@ namespace SmartTollSystem.Application.Services
         }
         public async Task<bool> TopUpBalanceAsync(Guid userId, decimal amount)
         {
-            var vehicleId = (await _vehicleService.GetVehicleByLoggedInUserAsync(userId)).VehicleId;
+            if (amount <= 0)
+            {
+                return false; // Ensure the amount is valid
+            }
 
+            // Begin a transaction to ensure atomicity
             await _unitOfWork.BeginTransactionAsync();
 
             try
             {
-                var vehicle = await _unitOfWork.VehicleRepository.GetByIdAsync(vehicleId);
-                if (vehicle == null || amount <= 0)
+                // Fetch the user by userId (not the vehicle)
+                var user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
+
+                // Check if the user exists
+                if (user == null)
                 {
                     await _unitOfWork.RollbackTransactionAsync();
-                    return false;
+                    return false; // User not found
                 }
 
-                vehicle.Balance += amount;
+                if (user.Balance == null)
+                {
+                    user.Balance = 0;
+                }
+                user.Balance += amount;
+
+                await _unitOfWork.UserRepository.UpdateAsync(user); // Update the user's balance
+
+                // Save the changes to the database
                 await _unitOfWork.SaveAsync();
 
-                await _unitOfWork.CommitTransactionAsync(); 
-                return true;
+                // Commit the transaction
+                await _unitOfWork.CommitTransactionAsync();
+                return true; // Successfully topped up
             }
             catch
             {
-                await _unitOfWork.RollbackTransactionAsync(); 
-                throw; 
+                // Rollback in case of error
+                await _unitOfWork.RollbackTransactionAsync();
+                throw; // Rethrow the exception to be handled at a higher level
             }
         }
-        public async Task<decimal> GetBalanceAsync(Guid vehicleId)
+
+        public async Task<decimal> GetBalanceAsync(Guid userId)
         {
-            var vehicle = await _unitOfWork.VehicleRepository.GetByIdAsync(vehicleId);
-            return vehicle?.Balance ?? 0;
+            var user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
+            return user?.Balance ?? 0;
         }
     }
 }

@@ -10,7 +10,7 @@ namespace SmartTollSystem.Domain.Interfaces
 {
     public interface ITollService
     {
-        Task<TollResultDto> ProcessTollAsync(LicensePlateDto licensePlateDto);
+        //Task<TollResultDto> ProcessTollAsync(LicensePlateDto licensePlateDto);
         Task<TollResultDto> ProcessTollAsyncV1(LicensePlateDto licensePlateDto);
 
         Task<IEnumerable<TollHistoryDto>> GetTollHistoryAsync(Guid userId);

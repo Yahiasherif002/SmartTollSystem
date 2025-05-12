@@ -88,7 +88,6 @@ namespace SmartTollSystem.Application.Services
                 PlateNumber = vehicle.LicensePlate,
                 Type = vehicle.Type.ToString(),
                 OwnerId = vehicle.OwnerId ?? Guid.Empty,
-                Balance = vehicle.Balance
 
             };
         }

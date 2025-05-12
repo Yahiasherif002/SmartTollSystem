@@ -25,7 +25,6 @@ namespace SmartTollSystem.Domain.Entities
         public bool NeedsConfirmation { get; set; }
         public string Type { get; set; } = string.Empty;
 
-        public decimal Balance { get; set; }
         public Guid? OwnerId { get; set; }
 
         [ForeignKey("OwnerId")]

@@ -58,20 +58,22 @@ namespace SmartTollSystem.Application.Services
                 Id = user.Id,
                 FullName = user.FullName,
                 Email = user.Email,
-                Role = "User"
+                Role = "User",
+                Balance = user.Balance ?? 0 
             });
         }
 
         public async Task<UserDto?> GetUserByIdAsync(Guid userId)
         {
-           var user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
+            var user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
             if (user == null) return null;
             return new UserDto
             {
                 Id = user.Id,
                 FullName = user.FullName,
                 Email = user.Email,
-                Role = "User"
+                Role = "User",
+                Balance = user.Balance ?? 0 
             };
         }
         public async Task<UserDto?> UpdateUserEntityAsync(UserDto userDto)

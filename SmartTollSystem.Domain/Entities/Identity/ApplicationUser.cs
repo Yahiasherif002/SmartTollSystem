@@ -16,6 +16,9 @@ namespace SmartTollSystem.Domain.Entities.Identity
 
         public string? City { get; set; }
 
+        public decimal? Balance { get; set; }
+
+
         public ICollection<Vehicle> Vehicles { get; set; } = new List<Vehicle>();
     }
 }

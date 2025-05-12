@@ -15,6 +15,9 @@ namespace SmartTollSystem.Domain.DTOs
         [JsonIgnore]
         public string Role { get; set; } = "VEHICLEOWNER";
 
+        [JsonIgnore]
+        public decimal Balance { get; set; }
+
         public List<VehicleDto> Vehicles { get; set; }
 
     }
