@@ -65,11 +65,11 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", builder =>
     {
-        builder.AllowAnyOrigin()
-               .AllowAnyMethod()
-               .AllowAnyHeader()
-               .WithExposedHeaders("Authorization") 
-               ;
+        builder.WithOrigins("http://localhost:3000") // your frontend URL
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials()
+                .AllowCredentials();
     });
 });
 
@@ -89,8 +89,8 @@ builder.Services.AddAuthentication(options =>
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
-        ValidateAudience = false,
-        ValidateLifetime = false,
+        ValidateAudience = true,
+        ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
         ValidIssuer = issuer,
         ValidAudience = audience,

@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using SmartTollSystem.Application.Contracts;
 using SmartTollSystem.Application.DTOs;
+using SmartTollSystem.Domain.DTOs;
 using SmartTollSystem.Domain.Entities.Identity;
 using SmartTollSystem.Domain.Interfaces;
 using System;
@@ -42,13 +43,17 @@ namespace SmartTollSystem.Application.Services
                 UserName = userRegisterDTO.Email,
                 Email = userRegisterDTO.Email,
                 PhoneNumber = userRegisterDTO.PhoneNumber,
-                FullName = userRegisterDTO.FirstName + " " + userRegisterDTO.LastName
+                FullName = userRegisterDTO.FirstName + " " + userRegisterDTO.LastName,
+                
+                
             };
 
             var result = await _userManager.CreateAsync(user, userRegisterDTO.Password);
             if (result.Succeeded)
             {
-                
+                var role = "VEHICLEOWNER";  // You can modify this default role as needed
+                var roleResult = await _userManager.AddToRoleAsync(user, role);
+
 
                 // Register vehicles if any are provided
                 if (userRegisterDTO.Vehicles != null)
@@ -164,8 +169,7 @@ namespace SmartTollSystem.Application.Services
 
         public Task<CurrentUserDto> GetCurrentUserAsync(string token)
         {
-            if (string.IsNullOrWhiteSpace(token))
-                return Task.FromResult<CurrentUserDto>(null);
+            
 
             // Remove 'bearer ' prefix if present
             if (token.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
