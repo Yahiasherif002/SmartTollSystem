@@ -183,7 +183,7 @@ using (var scope = app.Services.CreateScope())
     app.UseHealthChecks("/health");
 
 // Configure middleware
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment()||true)
 {
     app.UseDeveloperExceptionPage();
     app.MapOpenApi();

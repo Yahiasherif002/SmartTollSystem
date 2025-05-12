@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SmartTollSystem.Application.Contracts;
 using SmartTollSystem.Application.DTOs;
@@ -86,6 +87,19 @@ namespace SmartTollSystem.Api.Controllers
             if (expirationDate != null)
             {
                 return Ok(expirationDate);
+            }
+            return BadRequest("Invalid token");
+        }
+
+        [Authorize]
+        [HttpGet("currentUser")]
+        public async Task<IActionResult> GetCurrentUser()
+        {
+            var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            var currentUser = await _authService.GetCurrentUserAsync(token);
+            if (currentUser != null)
+            {
+                return Ok(currentUser);
             }
             return BadRequest("Invalid token");
         }

@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -160,5 +161,49 @@ namespace SmartTollSystem.Application.Services
             }
             return Task.FromResult(DateTime.MinValue);
         }
+
+        public Task<CurrentUserDto> GetCurrentUserAsync(string token)
+        {
+            if (string.IsNullOrWhiteSpace(token))
+                return Task.FromResult<CurrentUserDto>(null);
+
+            // Remove 'bearer ' prefix if present
+            if (token.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
+                token = token.Substring("Bearer ".Length).Trim();
+
+            var handler = new JwtSecurityTokenHandler();
+
+            if (!handler.CanReadToken(token))
+                return Task.FromResult<CurrentUserDto>(null);
+
+            var jwtToken = handler.ReadJwtToken(token);
+
+            var userIdClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+            var emailClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email);
+            var nameClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name);
+            var roleClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
+            var expirationClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Exp);
+
+            if (userIdClaim != null && emailClaim != null && nameClaim != null && roleClaim != null && expirationClaim != null)
+            {
+                var email = emailClaim.Value;
+                var mailAddress = new MailAddress(email);
+                var username = mailAddress.User;
+                return Task.FromResult(new CurrentUserDto
+                {
+                    Id = Guid.Parse(userIdClaim.Value),
+                    Email = emailClaim.Value,
+                    FullName = nameClaim.Value,
+                    Role = roleClaim.Value,
+                    ExpirationDate = DateTimeOffset.FromUnixTimeSeconds(long.Parse(expirationClaim.Value)).UtcDateTime,
+                    Token = token,
+                    UserName=username
+                    
+                });
+            }
+
+            return Task.FromResult<CurrentUserDto>(null);
+        }
+
     }
 }

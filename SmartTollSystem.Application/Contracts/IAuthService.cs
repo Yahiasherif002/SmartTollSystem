@@ -18,5 +18,8 @@ namespace SmartTollSystem.Application.Contracts
         Task<string> GetUserIdFromTokenAsync(string token);
         Task<string> GetRoleFromTokenAsync(string token);
         Task<DateTime> GetExpirationDateFromTokenAsync(string token);
+
+        Task<CurrentUserDto> GetCurrentUserAsync(string token);
+
     }
 }
